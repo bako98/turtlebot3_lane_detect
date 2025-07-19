@@ -23,7 +23,7 @@ https://emanual.robotis.com/docs/en/platform/openmanipulator_x/specification/#ha
 
 C270 HD 웹캠
 https://www.logitech.com/ko-kr/shop/p/c270-hd-webcam.960-000626
-<img width="300" height="527" alt="image" src="https://github.com/user-attachments/assets/2a6cd844-5c2f-4982-877f-de9cfa5ab85f" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/2a6cd844-5c2f-4982-877f-de9cfa5ab85f" />
 
 ---
 
