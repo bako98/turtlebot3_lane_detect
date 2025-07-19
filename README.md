@@ -28,7 +28,7 @@ https://emanual.robotis.com/docs/en/platform/openmanipulator_x/specification/#ha
 C270 HD 웹캠
 https://www.logitech.com/ko-kr/shop/p/c270-hd-webcam.960-000626
 
-<img width="240" alt="image" src="https://github.com/user-attachments/assets/2a6cd844-5c2f-4982-877f-de9cfa5ab85f" />
+<img width="160" alt="image" src="https://github.com/user-attachments/assets/2a6cd844-5c2f-4982-877f-de9cfa5ab85f" />
 
 ---
 
@@ -49,91 +49,9 @@ https://www.logitech.com/ko-kr/shop/p/c270-hd-webcam.960-000626
 ## 프로젝트 트리 구조
 
 ```
-robokrates_ws/
-├── build/
-├── flask_hospital/
-│   ├── dicom_output/
-│   │   ├── 1.2.410.200028.100.3.20190920.1208500638.12380.1.5.dcm
-│   │   ├── 1.2.410.200028.100.3.20190924.1430080534.21770.1.1.dcm
-│   │   └── 1.2.410.200028.100.3.20190925.1056080334.32610.1.2.dcm
-│   ├── flask_server_fin.py
-│   ├── png_input/
-│   │   ├── 1.2.410.200028.100.3.20190920.1208500638.12380.1.5.png
-│   │   ├── 1.2.410.200028.100.3.20190924.1430080534.21770.1.1.png
-│   │   └── 1.2.410.200028.100.3.20190925.1056080334.32610.1.2.png
-│   ├── __pycache__/
-│   │   ├── ros2_bridge.cpython-310.pyc
-│   │   └── ros_bridge_node.cpython-310.pyc
-│   ├── static/
-│   │   └── converted
-│   │       ├── 1.2.410.200028.100.3.20190920.1208500638.12380.1.5.png
-│   │       ├── 1.2.410.200028.100.3.20190924.1430080534.21770.1.1.png
-│   │       └── 1.2.410.200028.100.3.20190925.1056080334.32610.1.2.png
-│   ├── templates/
-│   │   └── index.html
-│   ├── test.py
-│   └── webcam.py
-├── install/
-├── log/
-└── src/
-    ├── hospital/
-    │   ├── hospital/
-    │   │   ├── controller/
-    │   │   │   ├── __init__.py
-    │   │   │   ├── onrobot.py
-    │   │   │   ├── robot_control.py
-    │   │   │   └── tracking.py
-    │   │   ├── detection/
-    │   │   │   ├── DetectionManager.py
-    │   │   │   ├── detection.py
-    │   │   │   ├── __init__.py
-    │   │   │   ├── realsense.py
-    │   │   │   ├── tracking_detection.py
-    │   │   │   ├── yolo.py
-    │   │   │   └── yolo_scalpel_tip.py
-    │   │   ├── __init__.py
-    │   │   ├── manager/
-    │   │   │   └── __init__.py
-    │   │   └── voice/
-    │   │       ├── get_keyword.py
-    │   │       ├── __init__.py
-    │   │       ├── MicController.py
-    │   │       ├── __pycache__/
-    │   │       │   ├── get_keyword.cpython-310.pyc
-    │   │       │   ├── __init__.cpython-310.pyc
-    │   │       │   ├── MicController.cpython-310.pyc
-    │   │       │   └── wakeup_word.cpython-310.pyc
-    │   │       ├── stt.py
-    │   │       ├── test_wake_up.py
-    │   │       ├── voice_TTS.py
-    │   │       └── wakeup_word.py
-    │   ├── package.xml
-    │   ├── resource/
-    │   │   ├── .env
-    │   │   ├── best.pt
-    │   │   ├── best_scalpel_tip.pt
-    │   │   ├── class_name_tool.json
-    │   │   ├── hello_rokey_8332_32.tflite
-    │   │   ├── hospital
-    │   │   ├── promt_content.txt
-    │   │   ├── surgery_info.txt
-    │   │   ├── T_gripper2camera.npy
-    │   │   ├── T_gripper2suction.npy
-    │   │   └── tts.mp3
-    │   ├── setup.cfg
-    │   └── setup.py
-    ├── hospital_interfaces/
-    │   ├── CMakeLists.txt
-    │   ├── LICENSE
-    │   ├── package.xml
-    │   └── srv/
-    │       ├── DepthAnglePos.srv
-    │       └── ObjectTarget.srv
-    └── DoosanBootcamp3rd/
-        ├── calibration/
-        ├── dsr_bringup2/
-        ├── ...
-        ...
+
+
+
 ```
 **requirement**
 
@@ -161,30 +79,26 @@ colcon build
 <img width="2075" height="869" alt="image" src="https://github.com/user-attachments/assets/3f86a342-cb47-4ffb-bfd7-02ffa23b616c" />
 
 ---
-## 1. 두산 로봇 노드
+## 1. gray img pub
 
-## 외부 패키지 DoosanBootcamp3rd 설치
-이 프로젝트는 다음 외부 패키지의 설치를 요구합니다:
-
-[DoosanBootcamp3rd GitHub](https://github.com/ROKEY-SPARK/DoosanBootcamp3rd)
-
-robokrates_ws/src/ 에 DoosanBootcamp3rd/ 를 넣고 src에서 colcon build 후 source install/setup.bash
-
-**터미널1 doosan robot 노드 실행**
+**터미널1 gray img pub 노드 실행**
 ```bash
-ros2 launch dsr_bringup2 dsr_bringup2_rviz.launch.py mode:=real host:=192.168.1.100 port:=12345 model:=m0609
+~/turtlebot3_ws$ python3 gray_img_pub.py 
 ```
----
-## 2. realsense 노드
 
-**터미널2 realsense 노드 실행**
+---
+## 2. aruco detector 노드
+
+**터미널2 aruco detector 노드 실행**
 ```bash
 ros2 launch realsense2_camera rs_align_depth_launch.py depth_module.depth_profile:=640x480x15 rgb_camera.color_profile:=640x480x15 initial_reset:=true align_depth.enable:=true enable_rgbd:=true
 ```
 
+<img width="1685" height="531" alt="image" src="https://github.com/user-attachments/assets/75197c2b-2d86-4554-958c-868c0c649944" />
+
 ---
 
-## 3. get_keyword 노드
+## 3. detect lane 노드
 
 사용자의 음성 명령을 인식하여 **도구(Object)** 및 **목적지(Target)** 정보를 추출하고, 이를 ROS2 서비스 형태로 다른 노드(예: robot_control)로 전달하는 **음성 기반 인터페이스 핵심 노드**입니다.
 
