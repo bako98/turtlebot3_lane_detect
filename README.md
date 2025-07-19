@@ -15,15 +15,15 @@
 
 Turtlebot3 Waffle Pi
 https://emanual.robotis.com/docs/en/platform/turtlebot3/features/#specifications
-<img width="571" alt="image" src="https://github.com/user-attachments/assets/ec18f961-035e-46a9-bf0c-8a51bdeb5d10" />
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/ec18f961-035e-46a9-bf0c-8a51bdeb5d10" />
 
 OpenMANIPULATOR-X
 https://emanual.robotis.com/docs/en/platform/openmanipulator_x/specification/#hardware-specification
-<img width="571" alt="image" src="https://github.com/user-attachments/assets/bb6fd4d8-2662-4d7b-9889-9a8054dbd5d4" />
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/bb6fd4d8-2662-4d7b-9889-9a8054dbd5d4" />
 
 C270 HD 웹캠
 https://www.logitech.com/ko-kr/shop/p/c270-hd-webcam.960-000626
-<img width="539" height="527" alt="image" src="https://github.com/user-attachments/assets/2a6cd844-5c2f-4982-877f-de9cfa5ab85f" />
+<img width="300" height="527" alt="image" src="https://github.com/user-attachments/assets/2a6cd844-5c2f-4982-877f-de9cfa5ab85f" />
 
 ---
 
