@@ -186,11 +186,11 @@ LogitechCameraPublisher는 ROS2 환경에서 USB 카메라로부터 실시간 �
 3. ArUco 마커 검출 및 포즈 추정
 - OpenCV의 cv2.aruco로 4x4_1000 딕셔너리를 사용해 마커 검출
 - 마커마다:
--- 2D 중심 좌표로부터 3D 좌표 계산
--- cv2.solvePnP로 rvec, tvec (회전 및 변환 벡터) 추출
--- 회전 행렬 → 오일러 각(yaw, pitch, roll) 변환
--- 카메라 기준 X, Y, Z 좌표로 보정 거리 및 위치 계산
--- 결과: [marker_id, marker_pos, (yaw, pitch, roll), distance]
+- - 2D 중심 좌표로부터 3D 좌표 계산
+- - cv2.solvePnP로 rvec, tvec (회전 및 변환 벡터) 추출
+- - 회전 행렬 → 오일러 각(yaw, pitch, roll) 변환
+- - 카메라 기준 X, Y, Z 좌표로 보정 거리 및 위치 계산
+- - 결과: [marker_id, marker_pos, (yaw, pitch, roll), distance]
 
 4. 거리 계산 및 보정
 - 보정 거리 식: distance * 0.767 - 0.076
