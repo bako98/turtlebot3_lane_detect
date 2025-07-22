@@ -275,7 +275,7 @@ pick_and_place.py는 ROS 2 환경에서 ArUco 마커를 인식하고, 이를 기
 
 <img width="600" alt="image" src="https://github.com/user-attachments/assets/e4bee6a9-5a05-4f9a-8933-8356ec7946e8" />
 
-
+---
 <img width="400" alt="image" src="https://github.com/user-attachments/assets/3aefecb5-9cb9-4397-a017-e833cf34e392" />
 
 
