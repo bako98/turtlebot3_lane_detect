@@ -1,4 +1,5 @@
-# 터틀봇3 + OpenMANIPULATOR-X 로봇으로 Lane Detecting 및 무브잇 역기구학 계산
+# 터틀봇3 + OpenMANIPULATOR-X 로봇
+# Lane Detecting 및 무브잇 역기구학 계산
 
 ---
 
@@ -49,36 +50,82 @@ https://www.logitech.com/ko-kr/shop/p/c270-hd-webcam.960-000626
 ## 프로젝트 트리 구조
 
 ```bash
-~/turtlebot3_ws/project$ tree
-.
+turtlebot3_ws/project/
 ├── aruco_detector.py
 ├── cmd_vel_graph.py
 ├── control_lane_finall.py
-├── debug_angle.py
-├── debug_Big.py
 ├── detect_lane_ori.py
 ├── gray_img_pub.py
 ├── pick_and_place.py
 └── turtlebot_arm_controller.cpp
 
+turtlebot3_ws/src/
+├── [aruco_yolo]
+├── dynamic_obstacle_plugin
+├── DynamixelSDK
+├── fsd_pkg
+├── image_pipeline
+├── ld08_driver
+├── pyqt_robot
+├── sample_pkg
+├── turtlebot3
+│   ├── turtlebot3
+│   ├── turtlebot3_bringup
+│   ├── turtlebot3_cartographer
+│   ├── turtlebot3_description
+│   ├── turtlebot3_example
+│   ├── turtlebot3_navigation2
+│   ├── turtlebot3_node
+│   └── turtlebot3_teleop
+├── turtlebot3_autorace
+│   ├── turtlebot3_autorace
+│   ├── turtlebot3_autorace_camera
+│   ├── turtlebot3_autorace_detect
+│   └── turtlebot3_autorace_mission
+├── [turtlebot3_manipulation]
+│   ├── turtlebot3_manipulation
+│   ├── turtlebot3_manipulation_bringup
+│   ├── turtlebot3_manipulation_description
+│   ├── turtlebot3_manipulation_hardware
+│   ├── turtlebot3_manipulation_moveit_config
+│   └── turtlebot3_manipulation_teleop
+├── turtlebot3_msgs
+├── turtlebot3_simulations
+├── [turtlebot_cosmo_interface]
+├── [turtlebot_moveit]
+│   ├── manipulator_moveit
+│   └── turtlebot_moveit
+└── vision_opencv
+    ├── cv_bridge
+    ├── image_geometry
+    ├── opencv_tests
+    └── vision_opencv
 ```
 **requirement**
 
-https://emanual.robotis.com/docs/en/platform/turtlebot3/quick-start/
+[https://github.com/bako98/gazebo_turtlebot3_lane_detect](https://github.com/bako98/gazebo_turtlebot3_lane_detect)
+
+위 깃헙대로 requirement 사전설치
 
 **설치방법**
 
-robokrates_ws 를 다운받고
+turtlebot3_autorace_moveit_project.zip 을 다운받고 project폴더는 turtlebot3_ws에 이동
+
+turtlebot_arm_controller.cpp 의 경우 turtlebot3_ws/src/turtlebot_moveit/turtlebot_moveit/src/turtlebot_arm_controller.cpp 로 이동
+
+나머지 modified 폴더안에 패키지들은 위 트리구조의 [package] 처럼 대괄호 친 것들을 바꾸기
+
+그리고 빌드
 
 ```bash
-cd robokrates_ws/
+cd turtlebot3_ws/
 colcon build
 ```
 ---
 
 ## ROS2 노드 구성
 
-- **camera**
+- **image publisher**
 - **aruco detector**
 - **detect lane**
 - **control lane**
@@ -90,7 +137,34 @@ colcon build
 ---
 ## 1. gray img pub
 
+LogitechCameraPublisher는 ROS2 환경에서 USB 카메라로부터 실시간 영상을 수신하고, 그레이스케일로 변환한 뒤 JPEG 압축 형식(CompressedImage)으로 퍼블리시하는 카메라 드라이버 노드입니다.
+
+✅ 주요 기능
+1. 카메라 초기화 및 설정
+- /dev/video0에 연결된 USB 카메라(예: 로지텍 웹캠) 열기
+- 해상도: 320x240
+- 프레임 속도(FPS): 30fps
+- 설정 결과를 ROS 로그로 출력
+
+2. ROS 퍼블리셔 생성
+- 퍼블리시 토픽: /camera/image/compressed
+- 메시지 타입: sensor_msgs/CompressedImage
+- 퍼블리시 주기: 1/30초 (약 33ms)로 타이머 콜백 실행
+
+3. 영상 처리 및 퍼블리시
+- 실시간으로 프레임 캡처
+- RGB → Grayscale 변환 후 다시 BGR로 재변환 → 압축 시 색상 채널이 필요하기 때문 (JPEG)
+- cv_bridge를 사용하여 OpenCV 이미지 → ROS 메시지로 변환
+- 타임스탬프와 frame_id 포함 후 퍼블리시
+
+4. 예외 처리 및 자원 해제
+- 카메라 오픈 실패 시 에러 로그 출력 후 종료
+- 프레임 캡처 실패 및 cv_bridge 예외 발생 시 경고 출력
+- 노드 종료 시 VideoCapture 해제 및 rclpy.shutdown()
+  
+
 **터미널1 gray img pub 노드 실행**
+
 ```bash
 ~/turtlebot3_ws$ python3 gray_img_pub.py 
 ```
@@ -98,9 +172,42 @@ colcon build
 ---
 ## 2. aruco detector 노드
 
+
+✅ 주요 기능
+1. 카메라 보정 파라미터 로딩
+- aruco_yolo/config/calibration_params.yaml에서 camera_matrix와 distortion_coefficients 로딩
+- 보정된 카메라 파라미터를 통해 ArUco 마커의 3D 위치 계산 수행
+
+2. 이미지 수신 및 전처리
+- /camera/image/compressed 토픽으로부터 영상 구독
+- cv_bridge를 통해 압축된 이미지를 OpenCV 이미지로 변환
+- 해상도 320x240으로 리사이즈 후, Grayscale 변환 및 CLAHE 보정 적용 → 인식률 향상
+
+3. ArUco 마커 검출 및 포즈 추정
+- OpenCV의 cv2.aruco로 4x4_1000 딕셔너리를 사용해 마커 검출
+- 마커마다:
+-- 2D 중심 좌표로부터 3D 좌표 계산
+-- cv2.solvePnP로 rvec, tvec (회전 및 변환 벡터) 추출
+-- 회전 행렬 → 오일러 각(yaw, pitch, roll) 변환
+-- 카메라 기준 X, Y, Z 좌표로 보정 거리 및 위치 계산
+-- 결과: [marker_id, marker_pos, (yaw, pitch, roll), distance]
+
+4. 거리 계산 및 보정
+- 보정 거리 식: distance * 0.767 - 0.076
+- 가장 가까운 마커만 선택하여 /aruco/distance (Float32)로 퍼블리시
+
+5. MarkerArray 퍼블리시
+- 가장 가까운 마커에 대한 정보(id, position, orientation)를 aruco_msgs/MarkerArray로 /detected_markers 토픽에 퍼블리시
+
+6. 디버깅 및 시각화
+- OpenCV를 통해 마커와 텍스트 정보가 포함된 결과 영상을 imshow()로 표시
+- 키 입력 대기 없이 1ms마다 갱신 (cv2.waitKey(1))
+
+
 **터미널2 aruco detector 노드 실행**
+
 ```bash
-ros2 launch realsense2_camera rs_align_depth_launch.py depth_module.depth_profile:=640x480x15 rgb_camera.color_profile:=640x480x15 initial_reset:=true align_depth.enable:=true enable_rgbd:=true
+~/turtlebot3_ws$ python3 aruco_detector.py 
 ```
 
 <img width="1685" height="531" alt="image" src="https://github.com/user-attachments/assets/75197c2b-2d86-4554-958c-868c0c649944" />
