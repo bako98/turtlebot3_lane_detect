@@ -15,18 +15,21 @@
 ### **하드웨어**
 
 Turtlebot3 Waffle Pi
+
 https://emanual.robotis.com/docs/en/platform/turtlebot3/features/#specifications
 
 <img width="320" alt="image" src="https://github.com/user-attachments/assets/ec18f961-035e-46a9-bf0c-8a51bdeb5d10" />
 
 
 OpenMANIPULATOR-X
+
 https://emanual.robotis.com/docs/en/platform/openmanipulator_x/specification/#hardware-specification
 
 <img width="320" alt="image" src="https://github.com/user-attachments/assets/bb6fd4d8-2662-4d7b-9889-9a8054dbd5d4" />
 
 
 C270 HD 웹캠
+
 https://www.logitech.com/ko-kr/shop/p/c270-hd-webcam.960-000626
 
 <img width="160" alt="image" src="https://github.com/user-attachments/assets/2a6cd844-5c2f-4982-877f-de9cfa5ab85f" />
@@ -272,6 +275,7 @@ pick_and_place.py는 ROS 2 환경에서 ArUco 마커를 인식하고, 이를 기
 
 <img width="600" alt="image" src="https://github.com/user-attachments/assets/e4bee6a9-5a05-4f9a-8933-8356ec7946e8" />
 
+
 <img width="400" alt="image" src="https://github.com/user-attachments/assets/3aefecb5-9cb9-4397-a017-e833cf34e392" />
 
 
@@ -408,7 +412,7 @@ pick_and_place.py는 ROS 2 환경에서 ArUco 마커를 인식하고, 이를 기
 
 ## error(중앙차선과의 x위치 오차) 와 선속도, 각속도 관계 그래프
 
-<img width="600" alt="image" src="https://github.com/user-attachments/assets/ea715e81-330f-4ae7-be3a-b66236e073e4" />
+<img width="700" alt="image" src="https://github.com/user-attachments/assets/ea715e81-330f-4ae7-be3a-b66236e073e4" />
 
 파라미터를 변경하며 안정적이면서도 빠르게 주행하는 값을 시행착오하며 구함.
 
